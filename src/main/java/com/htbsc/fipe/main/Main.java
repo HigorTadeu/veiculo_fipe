@@ -38,6 +38,7 @@ public class Main {
         var jsonAno = "";
         var jsonFinal = "";
         var codeModelo = "";
+        var retorno = false;
 
         int opcao = this.menu();
         switch (opcao){
@@ -50,8 +51,9 @@ public class Main {
                 System.out.println("Informe o modelo que deseja consultar: ");
                 codeModelo = scanner.nextLine();
 
-                this.pesquisaModelo("carro", codeModelo);
-                this.pesquisaAno(codeModelo);
+                retorno = this.pesquisaModelo("carro", codeModelo);
+                if (retorno)
+                    this.pesquisaAno("carro", codeModelo);
 
 //                System.out.println("Informe o modelo que deseja consultar: ");
 //                var codeModelo = scanner.nextLine();
@@ -92,7 +94,9 @@ public class Main {
                 System.out.println("Informe o modelo que deseja consultar: ");
                 codeModelo = scanner.nextLine();
 
-                this.pesquisaModelo("moto", codeModelo);
+                retorno = this.pesquisaModelo("moto", codeModelo);
+                if (retorno)
+                    this.pesquisaAno("moto", codeModelo);
 
                 break;
             case 3:
@@ -110,7 +114,7 @@ public class Main {
         }
     }
 
-    private void pesquisaModelo(String tipoVeiculo, String codeModel){
+    private boolean pesquisaModelo(String tipoVeiculo, String codeModel){
         String jsonModelo= "";
         String address = "";
 
@@ -128,7 +132,14 @@ public class Main {
         jsonModelo = connectionApi.getJson(address);
 
         var modelsList = dataConverter.getData(jsonModelo, Models.class);
-        modelsList.models().forEach(d -> System.out.println(d.toString()));
+        if (modelsList != null ){
+            if(modelsList.models() != null){
+                modelsList.models().forEach(d -> System.out.println(d.toString()));
+            } else {
+                System.out.println("Não existe o modelo solicitado!");
+                return false;
+            }
+        }
 
         System.out.print("Informe parte do nome do modelo que deseja pesquisa: ");
         var modelName = scanner.nextLine();
@@ -137,9 +148,10 @@ public class Main {
                 .filter(d -> d.getName().toLowerCase().contains(modelName.toLowerCase()))
                 .forEach(System.out::println);
 
+        return true;
     }
 
-    private void pesquisaAno(String codeModel){
+    private void pesquisaAno(String tipoVeiculo, String codeModel){
         String json = "";
         String address = "";
 
@@ -147,7 +159,14 @@ public class Main {
         var code = scanner.nextLine();
 
         //https://parallelum.com.br/fipe/api/v1/carros/marcas/21/modelos/560/anos
-        json = connectionApi.getJson(ADDRESS_BEGIN + "carros" + ADDRESS_MARCA + "/" + codeModel + ADDRESS_MODEL + "/" + code + ADDRESS_YEAR);
+        if(tipoVeiculo.equals("carro")) {
+            json = connectionApi.getJson(ADDRESS_BEGIN + "carros" + ADDRESS_MARCA + "/" + codeModel + ADDRESS_MODEL + "/" + code + ADDRESS_YEAR);
+        } else if (tipoVeiculo.equals("moto")) {
+            json = connectionApi.getJson(ADDRESS_BEGIN + "motos" + ADDRESS_MARCA + "/" + codeModel + ADDRESS_MODEL + "/" + code + ADDRESS_YEAR);
+        } else {
+            json = connectionApi.getJson(ADDRESS_BEGIN + "caminhoes" + ADDRESS_MARCA + "/" + codeModel + ADDRESS_MODEL + "/" + code + ADDRESS_YEAR);
+        }
+
         List<CData> yearsModels = dataConverter.getList(json, CData.class);
         yearsModels.forEach(System.out::println);
     }

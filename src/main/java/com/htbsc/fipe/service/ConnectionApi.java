@@ -8,7 +8,7 @@ import java.net.http.HttpResponse;
 
 public class ConnectionApi {
     /**
-     * Method to consume the API from the given URL and return the JSON
+     * Method to consume the API from the given URL and return the JSON in String format
      * @param address URL of the API to be consumed
      * @return JSON returned by the API
      */
