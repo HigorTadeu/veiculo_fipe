@@ -1,27 +1,20 @@
 package com.htbsc.fipe.model;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-public class Car {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class CData {
     @JsonAlias("codigo")
-    private Integer code;
+    private String code;
     @JsonAlias("nome")
     private String name;
 
-    public Car(){
-
-    }
-
-    public Car(Integer code, String name){
-        this.code = code;
-        this.name = name;
-    }
-
-    public Integer getCode() {
+    public String getCode() {
         return code;
     }
 
-    public void setCode(Integer code) {
+    public void setCode(String code) {
         this.code = code;
     }
 
@@ -35,6 +28,6 @@ public class Car {
 
     @Override
     public String toString() {
-        return "Car -> Code: " + code + ", Name: " + name ;
+        return "Dados -> Code: " + code + ", Name: " + name ;
     }
 }

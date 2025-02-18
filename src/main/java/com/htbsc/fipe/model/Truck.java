@@ -1,8 +1,14 @@
 package com.htbsc.fipe.model;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+
 public class Truck {
+    @JsonAlias("codigo")
     private Integer code;
+    @JsonAlias("nome")
     private String name;
+
+    public Truck(){}
 
     public Truck(Integer code, String name){
         this.code = code;
@@ -23,5 +29,10 @@ public class Truck {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Truck -> Code: " + code + " Name: " + name ;
     }
 }
