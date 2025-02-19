@@ -34,15 +34,14 @@ public class Main {
 
     public void start(){
         var jsonMarca = "";
-        var jsonModelo = "";
-        var jsonAno = "";
-        var jsonFinal = "";
         var codeModelo = "";
         var retorno = false;
+        var tipoVeiculo = "";
 
         int opcao = this.menu();
         switch (opcao){
             case 1:
+                tipoVeiculo = "carro";
                 jsonMarca = connectionApi.getJson(ADDRESS_BEGIN + "carros" + ADDRESS_MARCA);
                 List<Car> cars = new ArrayList<>();
                 cars = dataConverter.getList(jsonMarca, Car.class);
@@ -51,41 +50,18 @@ public class Main {
                 System.out.println("Informe o modelo que deseja consultar: ");
                 codeModelo = scanner.nextLine();
 
-                retorno = this.pesquisaModelo("carro", codeModelo);
-                if (retorno)
-                    this.pesquisaAno("carro", codeModelo);
+                retorno = this.pesquisaModelo(tipoVeiculo, codeModelo);
+                if (retorno){
+                    System.out.print("Informe o código do modelo que deseja esquisar os anos: ");
+                    var code = scanner.nextLine();
 
-//                System.out.println("Informe o modelo que deseja consultar: ");
-//                var codeModelo = scanner.nextLine();
-//                jsonModelo = connectionApi.getJson(ADDRESS_BEGIN + "carros" + ADDRESS_MARCA + "/" + codeModelo + ADDRESS_MODEL);
-//
-//                var modelsList = dataConverter.getData(jsonModelo, Models.class);
-//                modelsList.models().forEach(d -> System.out.println(d.toString()));
-//
-//                System.out.print("Informe parte do nome do modelo que deseja pesquisa: ");
-//                var modelName = scanner.nextLine();
-//
-//                modelsList.models().stream()
-//                        .filter(d -> d.getName().toLowerCase().contains(modelName.toLowerCase()))
-//                        .forEach(System.out::println);
-
-                System.out.print("Informe o código do modelo que deseja esquisar os anos: ");
-                var code = scanner.nextLine();
-
-                //https://parallelum.com.br/fipe/api/v1/carros/marcas/21/modelos/560/anos
-                jsonAno = connectionApi.getJson(ADDRESS_BEGIN + "carros" + ADDRESS_MARCA + "/" + codeModelo + ADDRESS_MODEL + "/" + code + ADDRESS_YEAR);
-                List<CData> yearsModels = dataConverter.getList(jsonAno, CData.class);
-                yearsModels.forEach(System.out::println);
-
-                System.out.print("Informe o código que deseja pesquisar: ");
-                var codeYear = scanner.nextLine();
-                jsonFinal = connectionApi.getJson(ADDRESS_BEGIN + "carros" + ADDRESS_MARCA + "/" + codeModelo + ADDRESS_MODEL + "/" + code + ADDRESS_YEAR + "/" + codeYear);
-
-                var veiculo = dataConverter.getData(jsonFinal, Veiculo.class);
-                System.out.println(veiculo);
+                    this.pesquisaAno(tipoVeiculo, codeModelo, code);
+                    this.pesquisaVeiculo(tipoVeiculo, codeModelo, code);
+                }
 
                 break;
             case 2:
+                tipoVeiculo = "moto";
                 jsonMarca = connectionApi.getJson(ADDRESS_BEGIN + "motos" + ADDRESS_MARCA);
                 List<Motocicle> motocs = new ArrayList<>();
                 motocs = dataConverter.getList(jsonMarca, Motocicle.class);
@@ -94,12 +70,18 @@ public class Main {
                 System.out.println("Informe o modelo que deseja consultar: ");
                 codeModelo = scanner.nextLine();
 
-                retorno = this.pesquisaModelo("moto", codeModelo);
-                if (retorno)
-                    this.pesquisaAno("moto", codeModelo);
+                retorno = this.pesquisaModelo(tipoVeiculo, codeModelo);
+                if (retorno){
+                    System.out.print("Informe o código do modelo que deseja esquisar os anos: ");
+                    var code = scanner.nextLine();
+
+                    this.pesquisaAno(tipoVeiculo, codeModelo, code);
+                    this.pesquisaVeiculo(tipoVeiculo, codeModelo, code);
+                }
 
                 break;
             case 3:
+                tipoVeiculo = "caminhao";
                 jsonMarca = connectionApi.getJson(ADDRESS_BEGIN + "caminhoes" + ADDRESS_MARCA);
                 List<Truck> trucks = new ArrayList<>();
                 trucks = dataConverter.getList(jsonMarca, Truck.class);
@@ -108,7 +90,14 @@ public class Main {
                 System.out.println("Informe o modelo que deseja consultar: ");
                 codeModelo = scanner.nextLine();
 
-                this.pesquisaModelo("caminhao", codeModelo);
+                retorno = this.pesquisaModelo(tipoVeiculo, codeModelo);
+                if (retorno){
+                    System.out.print("Informe o código do modelo que deseja esquisar os anos: ");
+                    var code = scanner.nextLine();
+
+                    this.pesquisaAno(tipoVeiculo, codeModelo, code);
+                    this.pesquisaVeiculo(tipoVeiculo, codeModelo, code);
+                }
 
                 break;
         }
@@ -117,9 +106,6 @@ public class Main {
     private boolean pesquisaModelo(String tipoVeiculo, String codeModel){
         String jsonModelo= "";
         String address = "";
-
-//        System.out.println("Informe o modelo que deseja consultar: ");
-//        var codeModelo = scanner.nextLine();
 
         if(tipoVeiculo.equals("carro")) {
             address = ADDRESS_BEGIN + "carros" + ADDRESS_MARCA + "/" + codeModel + ADDRESS_MODEL;
@@ -151,14 +137,9 @@ public class Main {
         return true;
     }
 
-    private void pesquisaAno(String tipoVeiculo, String codeModel){
+    private void pesquisaAno(String tipoVeiculo, String codeModel, String code){
         String json = "";
-        String address = "";
 
-        System.out.print("Informe o código do modelo que deseja esquisar os anos: ");
-        var code = scanner.nextLine();
-
-        //https://parallelum.com.br/fipe/api/v1/carros/marcas/21/modelos/560/anos
         if(tipoVeiculo.equals("carro")) {
             json = connectionApi.getJson(ADDRESS_BEGIN + "carros" + ADDRESS_MARCA + "/" + codeModel + ADDRESS_MODEL + "/" + code + ADDRESS_YEAR);
         } else if (tipoVeiculo.equals("moto")) {
@@ -168,6 +149,27 @@ public class Main {
         }
 
         List<CData> yearsModels = dataConverter.getList(json, CData.class);
-        yearsModels.forEach(System.out::println);
+        if (!yearsModels.isEmpty())
+            yearsModels.forEach(System.out::println);
+    }
+
+    private void pesquisaVeiculo(String tipoVeiculo, String codeModelo, String code){
+        String json = "";
+
+        System.out.print("Informe o código que deseja pesquisar: ");
+        var codeYear = scanner.nextLine();
+
+        if (tipoVeiculo.equals("carro")) {
+            json = connectionApi.getJson(ADDRESS_BEGIN + "carros" + ADDRESS_MARCA + "/" + codeModelo + ADDRESS_MODEL + "/" + code + ADDRESS_YEAR + "/" + codeYear);
+        } else if (tipoVeiculo.equals("moto")) {
+            json = connectionApi.getJson(ADDRESS_BEGIN + "motos" + ADDRESS_MARCA + "/" + codeModelo + ADDRESS_MODEL + "/" + code + ADDRESS_YEAR + "/" + codeYear);
+        } else {
+            json = connectionApi.getJson(ADDRESS_BEGIN + "caminhoes" + ADDRESS_MARCA + "/" + codeModelo + ADDRESS_MODEL + "/" + code + ADDRESS_YEAR + "/" + codeYear);
+        }
+
+        var veiculo = dataConverter.getData(json, Veiculo.class);
+
+        if (veiculo != null)
+            System.out.println(veiculo);
     }
 }
