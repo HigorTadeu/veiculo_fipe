@@ -47,12 +47,12 @@ public class Main {
                 cars = dataConverter.getList(jsonMarca, Car.class);
                 cars.forEach(System.out::println);
 
-                System.out.println("Informe o modelo que deseja consultar: ");
+                System.out.println("\nInforme o modelo que deseja consultar: ");
                 codeModelo = scanner.nextLine();
 
                 retorno = this.pesquisaModelo(tipoVeiculo, codeModelo);
                 if (retorno){
-                    System.out.print("Informe o código do modelo que deseja esquisar os anos: ");
+                    System.out.print("\nInforme o código do modelo que deseja esquisar os anos: ");
                     var code = scanner.nextLine();
 
                     this.pesquisaAno(tipoVeiculo, codeModelo, code);
@@ -67,12 +67,12 @@ public class Main {
                 motocs = dataConverter.getList(jsonMarca, Motocicle.class);
                 motocs.forEach(System.out::println);
 
-                System.out.println("Informe o modelo que deseja consultar: ");
+                System.out.println("\nInforme o modelo que deseja consultar: ");
                 codeModelo = scanner.nextLine();
 
                 retorno = this.pesquisaModelo(tipoVeiculo, codeModelo);
                 if (retorno){
-                    System.out.print("Informe o código do modelo que deseja esquisar os anos: ");
+                    System.out.print("\nInforme o código do modelo que deseja esquisar os anos: ");
                     var code = scanner.nextLine();
 
                     this.pesquisaAno(tipoVeiculo, codeModelo, code);
@@ -87,12 +87,12 @@ public class Main {
                 trucks = dataConverter.getList(jsonMarca, Truck.class);
                 trucks.forEach(System.out::println);
 
-                System.out.println("Informe o modelo que deseja consultar: ");
+                System.out.println("\nInforme o modelo que deseja consultar: ");
                 codeModelo = scanner.nextLine();
 
                 retorno = this.pesquisaModelo(tipoVeiculo, codeModelo);
                 if (retorno){
-                    System.out.print("Informe o código do modelo que deseja esquisar os anos: ");
+                    System.out.print("\nInforme o código do modelo que deseja esquisar os anos: ");
                     var code = scanner.nextLine();
 
                     this.pesquisaAno(tipoVeiculo, codeModelo, code);
@@ -122,12 +122,12 @@ public class Main {
             if(modelsList.models() != null){
                 modelsList.models().forEach(d -> System.out.println(d.toString()));
             } else {
-                System.out.println("Não existe o modelo solicitado!");
+                System.out.println("\nNão existe o modelo solicitado!");
                 return false;
             }
         }
 
-        System.out.print("Informe parte do nome do modelo que deseja pesquisa: ");
+        System.out.print("\nInforme parte do nome do modelo que deseja pesquisa: ");
         var modelName = scanner.nextLine();
 
         modelsList.models().stream()
@@ -156,7 +156,7 @@ public class Main {
     private void pesquisaVeiculo(String tipoVeiculo, String codeModelo, String code){
         String json = "";
 
-        System.out.print("Informe o código que deseja pesquisar: ");
+        System.out.print("\nInforme o código que deseja pesquisar: ");
         var codeYear = scanner.nextLine();
 
         if (tipoVeiculo.equals("carro")) {
