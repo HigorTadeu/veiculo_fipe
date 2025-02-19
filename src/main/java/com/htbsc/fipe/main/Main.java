@@ -56,7 +56,7 @@ public class Main {
                     var code = scanner.nextLine();
 
                     this.pesquisaAno(tipoVeiculo, codeModelo, code);
-                    this.pesquisaVeiculo(tipoVeiculo, codeModelo, code);
+                    //this.pesquisaVeiculo(tipoVeiculo, codeModelo, code);
                 }
 
                 break;
@@ -76,7 +76,7 @@ public class Main {
                     var code = scanner.nextLine();
 
                     this.pesquisaAno(tipoVeiculo, codeModelo, code);
-                    this.pesquisaVeiculo(tipoVeiculo, codeModelo, code);
+                    //this.pesquisaVeiculo(tipoVeiculo, codeModelo, code);
                 }
 
                 break;
@@ -96,7 +96,7 @@ public class Main {
                     var code = scanner.nextLine();
 
                     this.pesquisaAno(tipoVeiculo, codeModelo, code);
-                    this.pesquisaVeiculo(tipoVeiculo, codeModelo, code);
+                    //this.pesquisaVeiculo(tipoVeiculo, codeModelo, code);
                 }
 
                 break;
@@ -149,15 +149,25 @@ public class Main {
         }
 
         List<CData> yearsModels = dataConverter.getList(json, CData.class);
-        if (!yearsModels.isEmpty())
-            yearsModels.forEach(System.out::println);
+        if (!yearsModels.isEmpty()){
+            List<Veiculo> veiculos = new ArrayList<>();
+
+            for (int i = 0; i < yearsModels.size(); i++){
+                Veiculo veiculo =  this.pesquisaVeiculo(tipoVeiculo, codeModel, code, yearsModels.get(i).getCode());
+                veiculos.add(veiculo);
+            }
+
+            System.out.println("\n Todos os veículos filtrados com avaliação por ano:");
+            veiculos.forEach(System.out::println);
+        }
+            //yearsModels.forEach(System.out::println);
     }
 
-    private void pesquisaVeiculo(String tipoVeiculo, String codeModelo, String code){
+    private Veiculo pesquisaVeiculo(String tipoVeiculo, String codeModelo, String code, String codeYear){
         String json = "";
 
-        System.out.print("\nInforme o código que deseja pesquisar: ");
-        var codeYear = scanner.nextLine();
+//        System.out.print("\nInforme o código que deseja pesquisar: ");
+//        var codeYear = scanner.nextLine();
 
         if (tipoVeiculo.equals("carro")) {
             json = connectionApi.getJson(ADDRESS_BEGIN + "carros" + ADDRESS_MARCA + "/" + codeModelo + ADDRESS_MODEL + "/" + code + ADDRESS_YEAR + "/" + codeYear);
@@ -167,9 +177,8 @@ public class Main {
             json = connectionApi.getJson(ADDRESS_BEGIN + "caminhoes" + ADDRESS_MARCA + "/" + codeModelo + ADDRESS_MODEL + "/" + code + ADDRESS_YEAR + "/" + codeYear);
         }
 
-        var veiculo = dataConverter.getData(json, Veiculo.class);
+        Veiculo veiculo = dataConverter.getData(json, Veiculo.class);
 
-        if (veiculo != null)
-            System.out.println(veiculo);
+        return veiculo;
     }
 }
