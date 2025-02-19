@@ -98,13 +98,9 @@ public class Veiculo {
 
     @Override
     public String toString() {
-        return "Veículo -> Type: " + type +", Price: " + price + ", Marca: " + marca +
+        return "Veículo ->  Price: " + price + ", Marca: " + marca +
                 ", model='" + model + '\'' +
                 ", year=" + year +
-                ", fuel='" + fuel + '\'' +
-                ", codeFipe='" + codeFipe + '\'' +
-                ", monthReference='" + monthReference + '\'' +
-                ", siglaCombustivel='" + siglaCombustivel + '\'' +
-                '}';
+                ", fuel='" + fuel ;
     }
 }
